@@ -11,6 +11,7 @@ from scipy import stats
 from imageio import imread, imsave
 import numpy as np
 import matplotlib.pyplot as plt
+from functions import *
 
 
 # data
@@ -20,20 +21,21 @@ image3 = imread('data/image3.png')
 
 images = np.dstack((image1, image2, image3))
 # tree building
-Bc = np.zeros((3,3,3), dtype = bool)
+Bc = np.zeros((3, 3, 3), dtype=bool)
 Bc[1, 1, :] = True
 Bc[:, 1, 1] = True
 Bc[1, :, 1] = True
 
 
-#min tree
-tree1 = siamxt.MaxTreeAlpha(images, Bc)
-#duration_filter(tree1,1)
-tempstabil=temp_stability_ratio(tree1)
+#max tree
+tree = siamxt.MaxTreeAlpha(images, Bc)
+_ = duration_filter(tree, 1)
+tempstabil = temp_stability_ratio(tree)
 
-#nodes=np.where(tempstabil<1.7)[0]
-#result=sum_of_nodes(tree1,nodes)
-result=stability_filter(tree1,0.1)
+
+result = stability_filter(tree, 0.82)
 show_images(result)
 
-show_images(border(images))
+imsave("results/image1result.png", result[:, :, 0])
+imsave("results/image2result.png", result[:, :, 1])
+imsave("results/image3result.png", result[:, :, 2])

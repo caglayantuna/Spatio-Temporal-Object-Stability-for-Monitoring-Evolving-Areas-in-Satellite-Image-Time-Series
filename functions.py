@@ -39,6 +39,8 @@ def temp_stability_ratio(tree):
 
     tempstability=tempstability/(b-1)
     return tempstability
+
+
 def stability_filter(tree, t):
     stability = temp_stability_ratio(tree)
     node = np.where(stability < t)
@@ -48,6 +50,8 @@ def stability_filter(tree, t):
     tree.prune(nodes)
     result = tree.getImage()
     return result
+
+
 def border(im):
     im = 255 - im
     im[0, :, :] = 0
@@ -55,5 +59,21 @@ def border(im):
     im[:, -1, :] = 0
     im[-1, :, :] = 0
     return im
-    
+
+
+def time_duration(tree):
+    time = tree.node_array[13, :] - tree.node_array[12, :]
+    return time
+
+
+def duration_filter(tree,t):
+    time=time_duration(tree)
+    tree.node_array[3,:]=time
+    filtered=attribute_area_filter(tree,t)
+    return filtered
+
+def attribute_area_filter(mxt,area):
+    mxt.areaOpen(area)
+    ao = mxt.getImage()
+    return ao
 
